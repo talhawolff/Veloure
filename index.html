@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <script>
+      (function () {
+        try {
+          if (typeof window !== 'undefined') {
+            if (!window.global) {
+              window.global = window;
+            }
+            var _realFetch = window.fetch;
+            var _currentFetch = _realFetch ? _realFetch.bind(window) : undefined;
+            Object.defineProperty(window, 'fetch', {
+              get: function () {
+                return _currentFetch;
+              },
+              set: function (v) {
+                _currentFetch = v;
+              },
+              configurable: true,
+              enumerable: true
+            });
+          }
+        } catch (e) {
+          console.warn('Fetch descriptor polyfill warning:', e);
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veloure - Peer-to-Peer Reputation Lending on Arc Testnet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-[#FBF3E8] text-[#332216] font-sans antialiased min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

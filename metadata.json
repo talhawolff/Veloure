@@ -1,0 +1,6 @@
+{
+  "name": "Veloure",
+  "description": "Peer-to-peer reputation-based lending platform deployed on Arc Testnet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
