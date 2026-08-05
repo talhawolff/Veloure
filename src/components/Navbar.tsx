@@ -1,70 +1,70 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { VeloureLogo } from './VeloureLogo';
-import { Menu, X, ArrowUpRight, Wallet, ShieldCheck } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'My Offers', path: '/offers' },
-    { name: 'Propose Loan', path: '/propose' },
-    { name: 'Active Loans', path: '/loans' },
-    { name: 'Reputation', path: '/reputation' },
-  ];
-
-  const isActive = (path: string) => {
-    if (path === '/' && location.pathname === '/') return true;
-    if (path !== '/' && location.pathname.startsWith(path)) return true;
-    return false;
+  const handleScrollToSection = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FBF3E8]/90 backdrop-blur-md border-b border-[#332216]/10 px-4 lg:px-8 py-3 transition-all">
+    <header className="sticky top-0 z-50 bg-[#FAF6EF]/90 backdrop-blur-md px-6 lg:px-12 py-4 transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Brand Logo & Name */}
+        {/* Left: Brand Logo & Name */}
         <Link to="/" className="flex items-center gap-3 group">
-          <VeloureLogo className="h-9 w-9 transition-transform group-hover:scale-105" />
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-2xl tracking-tight text-[#332216]">
-              Veloure
-            </span>
-            <span className="text-[10px] font-sans tracking-widest text-[#8e4e20] uppercase font-semibold -mt-1">
-              Arc Testnet
-            </span>
+          <div className="w-9 h-9 rounded-md bg-[#FAF0E4] border border-[#332216]/10 flex items-center justify-center p-1 shadow-xs">
+            <VeloureLogo className="h-7 w-7 transition-transform group-hover:scale-105" />
           </div>
+          <span className="font-display font-bold text-2xl tracking-tight text-[#332216]">
+            Veloure
+          </span>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-2 bg-[#fff8f5]/80 p-1.5 rounded-full border border-[#332216]/10 shadow-sm">
-          {navLinks.map((link) => {
-            const active = isActive(link.path);
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-2 rounded-full text-sm font-sans font-medium transition-all ${
-                  active
-                    ? 'bg-[#BE5103] text-white shadow-sm font-semibold'
-                    : 'text-[#332216] hover:bg-[#ffe3d2]/60 hover:text-[#973e00]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
+        {/* Center: Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-sans font-medium text-[#554436]">
+          <Link
+            to="/propose"
+            className="hover:text-[#BE5103] transition-colors"
+          >
+            Lend
+          </Link>
+          <Link
+            to="/offers"
+            className="hover:text-[#BE5103] transition-colors"
+          >
+            Negotiate
+          </Link>
+          <Link
+            to="/reputation"
+            className="hover:text-[#BE5103] transition-colors"
+          >
+            Reputation
+          </Link>
+          <button
+            onClick={() => handleScrollToSection('about-section')}
+            className="hover:text-[#BE5103] transition-colors cursor-pointer"
+          >
+            About
+          </button>
         </nav>
 
-        {/* Right Section: Network Indicator & RainbowKit Connect Button */}
+        {/* Right: Connect Wallet / Launch App button */}
         <div className="hidden sm:flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#6a5d36]/10 text-[#6a5d36] text-xs font-semibold border border-[#6a5d36]/20">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Arc Testnet
-          </div>
-
           <ConnectButton.Custom>
             {({
               account,
@@ -99,10 +99,9 @@ export const Navbar: React.FC = () => {
                         <button
                           onClick={openConnectModal}
                           type="button"
-                          className="flex items-center gap-2 bg-[#BE5103] hover:bg-[#973e00] text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
+                          className="bg-[#FAF0E4] hover:bg-[#F2E4D2] text-[#332216] border border-[#332216]/15 px-6 py-2 rounded-full text-xs font-semibold tracking-wide transition-all shadow-2xs hover:shadow-xs active:scale-95"
                         >
-                          <Wallet className="w-4 h-4" />
-                          <span>Connect Wallet</span>
+                          Launch App
                         </button>
                       );
                     }
@@ -112,31 +111,21 @@ export const Navbar: React.FC = () => {
                         <button
                           onClick={openChainModal}
                           type="button"
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-sm"
+                          className="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-full text-xs font-semibold shadow-xs"
                         >
-                          Wrong Network (Switch to Arc)
+                          Switch Network
                         </button>
                       );
                     }
 
                     return (
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={openAccountModal}
-                          type="button"
-                          className="flex items-center gap-2 bg-[#fff8f5] hover:bg-[#ffe3d2] border border-[#332216]/15 text-[#332216] px-4 py-2 rounded-full text-sm font-medium shadow-xs transition-all"
-                        >
-                          <ShieldCheck className="w-4 h-4 text-[#BE5103]" />
-                          <span className="font-mono text-xs font-semibold">
-                            {account.displayName}
-                          </span>
-                          {account.displayBalance ? (
-                            <span className="text-xs text-[#8e4e20] pl-1 border-l border-[#332216]/10">
-                              {account.displayBalance}
-                            </span>
-                          ) : null}
-                        </button>
-                      </div>
+                      <button
+                        onClick={openAccountModal}
+                        type="button"
+                        className="bg-[#FAF0E4] hover:bg-[#F2E4D2] border border-[#332216]/15 text-[#332216] px-5 py-2 rounded-full text-xs font-mono font-semibold transition-all shadow-2xs"
+                      >
+                        {account.displayName}
+                      </button>
                     );
                   })()}
                 </div>
@@ -145,10 +134,10 @@ export const Navbar: React.FC = () => {
           </ConnectButton.Custom>
         </div>
 
-        {/* Mobile Menu Trigger */}
+        {/* Mobile Hamburger Trigger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-[#332216] hover:bg-[#ffe3d2] rounded-lg transition-colors"
+          className="md:hidden p-2 text-[#332216] hover:bg-[#FAF0E4] rounded-lg transition-colors"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -157,21 +146,37 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-3 pt-3 border-t border-[#332216]/10 space-y-2 pb-3 animate-in fade-in slide-in-from-top-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-2.5 rounded-xl text-base font-medium transition-colors ${
-                isActive(link.path)
-                  ? 'bg-[#BE5103] text-white font-semibold'
-                  : 'text-[#332216] hover:bg-[#ffe3d2]'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+        <div className="md:hidden mt-3 pt-3 border-t border-[#332216]/10 space-y-3 pb-3">
+          <Link
+            to="/propose"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2 rounded-lg text-sm font-medium text-[#332216] hover:bg-[#FAF0E4]"
+          >
+            Lend
+          </Link>
+          <Link
+            to="/offers"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2 rounded-lg text-sm font-medium text-[#332216] hover:bg-[#FAF0E4]"
+          >
+            Negotiate
+          </Link>
+          <Link
+            to="/reputation"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2 rounded-lg text-sm font-medium text-[#332216] hover:bg-[#FAF0E4]"
+          >
+            Reputation
+          </Link>
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              handleScrollToSection('about-section');
+            }}
+            className="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-[#332216] hover:bg-[#FAF0E4]"
+          >
+            About
+          </button>
           <div className="pt-2 px-2">
             <ConnectButton />
           </div>
@@ -180,3 +185,4 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
+
